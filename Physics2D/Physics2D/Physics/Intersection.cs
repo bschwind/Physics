@@ -176,7 +176,6 @@ namespace Physics2D.Physics
             //Intersect segment against the two segments of the capsule
             //Intersect against the two circles (the caps of the capsule)
             //Check the distances and take the closest point
-
             Vector2 closestPoint = Vector2.Zero;
             Vector2 tempPoint = Vector2.Zero;
             bool hit = false;
@@ -272,7 +271,6 @@ namespace Physics2D.Physics
                 normal *= radius;
                 LineSegment newSeg = new LineSegment(seg.Start + normal, seg.End + normal);
                 TestLineLine(newSeg, capSeg, out newCirclePos, out parallel);
-                Console.WriteLine("Hit the segment");
                 return true;
             }
 
@@ -289,7 +287,6 @@ namespace Physics2D.Physics
                     normal *= radius;
                     LineSegment newSeg = new LineSegment(seg.Start + normal, seg.End + normal);
                     TestLineLine(newSeg, capSeg, out newCirclePos, out parallel);
-                    Console.WriteLine("Hit the start");
                     return true;
                 }
             }
@@ -307,7 +304,6 @@ namespace Physics2D.Physics
                     normal *= radius;
                     LineSegment newSeg = new LineSegment(seg.Start + normal, seg.End + normal);
                     TestLineLine(newSeg, capSeg, out newCirclePos, out parallel);
-                    Console.WriteLine("Hit the end");
                     return true;
                 }
             }

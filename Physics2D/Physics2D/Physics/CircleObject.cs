@@ -10,6 +10,7 @@ namespace Physics2D.Physics
     {
         private float mass;
         private float radius;
+        private float cor;
 
         private float rot;
         private float rotVel;
@@ -91,6 +92,14 @@ namespace Physics2D.Physics
             }
         }
 
+        public float COR
+        {
+            get
+            {
+                return cor;
+            }
+        }
+
         public Vector2 Force
         {
             get
@@ -107,10 +116,11 @@ namespace Physics2D.Physics
             }
         }
 
-        public CircleObject(float mass, float radius, Vector2 pos)
+        public CircleObject(float mass, float radius, float cor, Vector2 pos)
         {
             this.mass = mass;
             this.radius = radius;
+            this.cor = cor;
             this.pos = pos;
             this.inertia = (mass * radius * radius) / 2;
         }
