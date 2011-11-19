@@ -43,13 +43,11 @@ namespace Physics2D.GUI
         private void setupEngine()
         {
             engine = new PhysicsEngine();
-            obj = new CircleObject(1, 0.5f, 0.5f, new Vector2(5, 5));
+            obj = new CircleObject(1, 3f, 0.4f, new Vector2(5, 5));
             engine.AddCircle(obj);
 
             floor = new LineSegment(new Vector2(0, 0), new Vector2(10, 0));
-            //engine.AddSegment(floor);
-            engine.AddSegment(new LineSegment(new Vector2(0, 0), new Vector2(5, -5)));
-            engine.AddSegment(new LineSegment(new Vector2(5, -5), new Vector2(10, 0)));
+            engine.AddSegment(floor);
         }
 
         protected override void OnRefresh()
