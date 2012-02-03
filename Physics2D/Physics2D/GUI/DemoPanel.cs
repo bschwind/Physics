@@ -5,37 +5,35 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Physics2D.Graphics;
 using Physics2D.Physics;
-using Physics2D.Input;
+using Physics2D.Physics.Bodies;
+using Physics2D.Graphics;
+using GraphicsToolkit.GUI;
+using GraphicsToolkit.Graphics;
+using GraphicsToolkit.Input;
 
 namespace Physics2D.GUI
 {
     public class DemoPanel : Panel
     {
-        PrimitiveBatch2D primBatch;
-        SpriteBatch spriteBatch;
+        PrimitiveBatch primBatch;
         Camera2D cam;
         Vector2 mouseForceStart;
         bool mouseHeldDown = false;
 
         PhysicsEngine engine;
-        CircleObject obj;
-        LineSegment floor;
 
         public DemoPanel(Vector2 upLeft, Vector2 botRight)
             : base(upLeft, botRight)
         {
             cam = new Camera2D(new Vector2(5, 5), this);
-            cam.SetZoom(10);
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager content)
         {
             base.LoadContent(content);
 
-            primBatch = new PrimitiveBatch2D(Panel.Device);
-            spriteBatch = new SpriteBatch(Panel.Device);
+            primBatch = new PrimitiveBatch(Panel.Device);
 
             setupEngine();
         }
@@ -43,17 +41,27 @@ namespace Physics2D.GUI
         private void setupEngine()
         {
             engine = new PhysicsEngine();
-            obj = new CircleObject(1, 3f, 0.4f, new Vector2(5, 5));
-            engine.AddCircle(obj);
+            int bodyCount = 8; 
+            for (int i = 0; i < bodyCount; i++)
+            {
+                engine.AddRigidBody(new CircleBody(new Vector2(i+1, 8), new Vector2(0, 0), 10f, 0.1f));
+            }
 
-            floor = new LineSegment(new Vector2(0, 0), new Vector2(10, 0));
-            engine.AddSegment(floor);
+            for (int i = 0; i < bodyCount; i++)
+            {
+                engine.AddRigidBody(new CircleBody(new Vector2(i+1.1f, 0), new Vector2(0,0), 10f, 0.1f));
+            }
+
+            engine.AddRigidBody(new PlaneBody(Vector2.UnitY, Vector2.Zero));
+            engine.AddRigidBody(new PlaneBody(Vector2.UnitX, Vector2.Zero));
+            engine.AddRigidBody(new PlaneBody(-Vector2.UnitY, new Vector2(0, 10)));
+            engine.AddRigidBody(new PlaneBody(-Vector2.UnitX, new Vector2(10, 0)));
         }
 
         protected override void OnRefresh()
         {
             base.OnRefresh();
-            cam.Resize(width, height);
+            cam.Resize();
         }
 
         public override void Update(GameTime g)
@@ -62,10 +70,11 @@ namespace Physics2D.GUI
 
             cam.Update(g);
 
-            if (InputHandler.IsNewLeftMousePress())
+            if (InputHandler.MouseState.LeftButton == ButtonState.Pressed && InputHandler.LastMouseState.LeftButton == ButtonState.Released)
             {
                 mouseHeldDown = true;
                 mouseForceStart = cam.GetWorldMousePos();
+                engine.AddRigidBody(new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.1f));
             }
             else if (InputHandler.MouseState.LeftButton != ButtonState.Pressed)
             {
@@ -77,9 +86,8 @@ namespace Physics2D.GUI
             if (mouseHeldDown)
             {
                 force = mouseWorldPos - mouseForceStart;
+                engine.SetGravity(force);
             }
-
-            obj.AddForce(force, mouseWorldPos-obj.Pos);
 
             engine.Update(g);
         }
@@ -92,22 +100,20 @@ namespace Physics2D.GUI
             Vector2 worldMousePos = cam.GetWorldMousePos();
 
             primBatch.Begin(PrimitiveType.LineList, cam);
-            primBatch.DrawGrid(10, 10, Color.DarkSlateBlue);
-            foreach (CircleObject c in engine.GetCircles())
+            primBatch.Draw2DGrid(10, 10, Color.DarkSlateBlue);
+            foreach (RigidBody2D rb in engine.GetBodies())
             {
-                primBatch.DrawRotatedCircle(new Circle(new Vector3(c.Pos, 0), c.Radius), c.Rot, Color.Orange, Color.Brown);
+                CircleBody c = rb as CircleBody;
+                if (c != null)
+                {
+                    primBatch.DrawCircle(c.Pos, c.Radius, 3, Color.Orange);
+                }
             }
             if (mouseHeldDown)
             {
                 primBatch.DrawLine(new Vector3(mouseForceStart, 0), new Vector3(worldMousePos, 0), Color.Red);
             }
             primBatch.End();
-
-            
-            //node.Pos = worldMousePos;
-
-            //Vector2 drawPos = cam.GetScreenPos(new Vector3(node.Pos, 0));
-            //spriteBatch.Draw(tex, cam.WorldRectToScreen(node.GetWorldRect()), Color.White);
         }
     }
 }

@@ -60,6 +60,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GraphicsToolkit">
+      <HintPath>..\..\..\GraphicsToolkit\GraphicsToolkit\bin\x86\Debug\GraphicsToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -107,21 +110,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
-    <Compile Include="Graphics\Camera.cs" />
-    <Compile Include="Graphics\Camera2D.cs" />
     <Compile Include="Graphics\Circle.cs" />
-    <Compile Include="Graphics\PrimitiveBatch2D.cs" />
     <Compile Include="Graphics\RectangleF.cs" />
     <Compile Include="GUI\DemoPanel.cs" />
-    <Compile Include="GUI\GUIManager.cs" />
-    <Compile Include="GUI\Panel.cs" />
-    <Compile Include="Input\InputHandler.cs" />
+    <Compile Include="Physics\Bodies\CircleBody.cs" />
+    <Compile Include="Physics\Bodies\PlaneBody.cs" />
+    <Compile Include="Physics\Bodies\RigidBody.cs" />
     <Compile Include="Physics\CircleObject.cs" />
+    <Compile Include="Physics\Contact.cs" />
     <Compile Include="Physics\GameMath.cs" />
     <Compile Include="Physics\Intersection.cs" />
     <Compile Include="Physics\LineSegment.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
+    <Compile Include="Physics\PhysicsEngineOld.cs" />
+    <Compile Include="Physics\Solver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

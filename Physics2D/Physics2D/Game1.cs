@@ -8,10 +8,11 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Physics2D.Graphics;
 using Physics2D.Physics;
 using Physics2D.GUI;
-using Physics2D.Input;
+using GraphicsToolkit;
+using GraphicsToolkit.GUI;
+using GraphicsToolkit.Input;
 
 namespace Physics2D
 {
@@ -27,28 +28,17 @@ namespace Physics2D
             Content.RootDirectory = "Content";
 
             this.Window.AllowUserResizing = true;
-            graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
 
             IsMouseVisible = true;
             IsFixedTimeStep = true;
 
-            guiManager = new GUIManager(this);
+            guiManager = new GUIManager(this, graphics);
             guiManager.AddPanel(new DemoPanel(Vector2.Zero, Vector2.One));
             Components.Add(guiManager);
             Components.Add(new InputHandler(this));
 
             graphics.PreferredBackBufferWidth = Config.ScreenWidth;
             graphics.PreferredBackBufferHeight = Config.ScreenHeight;
-            graphics.PreferMultiSampling = true;
-            graphics.SynchronizeWithVerticalRetrace = true;
-            graphics.ApplyChanges();
-        }
-
-        void graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
-        {
-            Config.ScreenWidth = e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth;
-            Config.ScreenHeight = e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight;
-            guiManager.RefreshPanels();
         }
 
         protected override void Initialize()
