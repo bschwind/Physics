@@ -91,7 +91,10 @@ namespace Physics2D.GUI
             if (mouseHeldDown)
             {
                 force = mouseWorldPos - mouseForceStart;
-                engine.SetGravity(force);
+                foreach (RigidBody2D rb in engine.GetBodies())
+                {
+                    rb.AddForce(force);
+                }
             }
 
             engine.Update(g);
