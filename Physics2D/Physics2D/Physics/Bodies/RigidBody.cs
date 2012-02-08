@@ -11,6 +11,7 @@ namespace Physics2D.Physics.Bodies
         private Vector2 pos;
         private Vector2 vel;
         private float invMass;
+        private Vector2 force;
 
         public Vector2 Pos
         {
@@ -41,6 +42,14 @@ namespace Physics2D.Physics.Bodies
             }
         }
 
+        public Vector2 Force
+        {
+            get
+            {
+                return force;
+            }
+        }
+
         public RigidBody2D(Vector2 pos, Vector2 vel, float mass)
         {
             if (mass < 0)
@@ -60,6 +69,16 @@ namespace Physics2D.Physics.Bodies
 
             this.pos = pos;
             this.vel = vel;
+        }
+
+        public void AddForce(Vector2 f)
+        {
+            force += f;
+        }
+
+        public void ClearForces()
+        {
+            force = Vector2.Zero;
         }
 
         public abstract Contact GenerateContact(RigidBody2D rb, float dt);
