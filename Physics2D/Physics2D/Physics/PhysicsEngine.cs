@@ -44,8 +44,11 @@ namespace Physics2D.Physics
                 //Only apply to moving objects
                 if (rb.InvMass > 0)
                 {
-                    rb.Vel = rb.Vel + gravity;
+                    //Add in gravity, as well as any forces applied to our object
+                    rb.Vel = rb.Vel + gravity + (rb.Force * rb.InvMass);
                 }
+
+                rb.ClearForces();
             }
 
             //Detect and resolve contacts
@@ -65,7 +68,7 @@ namespace Physics2D.Physics
                 }
             }
 
-            Solver.Solve(contacts, 1, dt);
+            Solver.Solve(contacts, 3, dt);
 
             //Integrate
             foreach (RigidBody2D rb in bodies)
