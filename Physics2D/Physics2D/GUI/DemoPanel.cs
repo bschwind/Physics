@@ -44,12 +44,12 @@ namespace Physics2D.GUI
             int bodyCount = 8; 
             for (int i = 0; i < bodyCount; i++)
             {
-                engine.AddRigidBody(new CircleBody(new Vector2(i+1, 8), new Vector2(0, 0), 10f, 0.1f));
+                engine.AddRigidBody(new CircleBody(new Vector2(i+1, 8), new Vector2(0, 0), 10f, 0.2f));
             }
 
             for (int i = 0; i < bodyCount; i++)
             {
-                engine.AddRigidBody(new CircleBody(new Vector2(i+1.1f, 0), new Vector2(0,0), 10f, 0.1f));
+                engine.AddRigidBody(new CircleBody(new Vector2(i+1.1f, 0), new Vector2(0,0), 10f, 0.2f));
             }
 
             engine.AddRigidBody(new PlaneBody(Vector2.UnitY, Vector2.Zero));
@@ -74,11 +74,16 @@ namespace Physics2D.GUI
             {
                 mouseHeldDown = true;
                 mouseForceStart = cam.GetWorldMousePos();
-                engine.AddRigidBody(new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.1f));
+                
             }
             else if (InputHandler.MouseState.LeftButton != ButtonState.Pressed)
             {
                 mouseHeldDown = false;
+            }
+
+            if (InputHandler.MouseState.RightButton == ButtonState.Pressed)
+            {
+                engine.AddRigidBody(new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.2f));
             }
 
             Vector2 force = Vector2.Zero;
@@ -106,7 +111,7 @@ namespace Physics2D.GUI
                 CircleBody c = rb as CircleBody;
                 if (c != null)
                 {
-                    primBatch.DrawCircle(c.Pos, c.Radius, 3, Color.Orange);
+                    primBatch.DrawCircle(c.Pos, c.Radius, 12, Color.Orange);
                 }
             }
             if (mouseHeldDown)
