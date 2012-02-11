@@ -11,8 +11,8 @@ namespace Physics2D.Physics
     {
         public static void Solve(List<Contact> contacts, int iterations, float dt)
         {
-            int numSolved = 0;
             bool SpecSequential = false;
+            float dtInv = 1f / dt;
             for (int j = 0; j < iterations; j++)
             {
                 for (int i = 0; i < contacts.Count; i++)
@@ -25,14 +25,13 @@ namespace Physics2D.Physics
                     //Do either speculative or speculative sequential
                     if (!SpecSequential)
                     {
-                        float remove = relNv + con.Dist / dt;
+                        float remove = relNv + con.Dist * dtInv;
 
                         if (remove < 0)
                         {
                             float mag = remove / (con.A.InvMass + con.B.InvMass);
                             Vector2 imp = con.Normal * mag;
                             con.ApplyImpulses(imp);
-                            numSolved++;
                         }
                     }
                     else
