@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Physics2D.Physics.Bodies;
+using Physics2D.Physics.Geometry;
+using Physics2D.Physics.Partitions;
 
 namespace Physics2D.Physics
 {
@@ -11,11 +13,20 @@ namespace Physics2D.Physics
     {
         private Vector2 gravity = new Vector2(0, -0.1f);
         private List<RigidBody2D> bodies;
-        List<Contact> contacts = new List<Contact>();
+        private List<Contact> contacts = new List<Contact>();
+        private Partition partition;
 
         public PhysicsEngine()
         {
             bodies = new List<RigidBody2D>();
+            
+            //By default, use a grid partition
+            partition = new GridPartition();
+        }
+
+        public PhysicsEngine(Partition p)
+        {
+            partition = p;
         }
 
         public void AddRigidBody(RigidBody2D rb)
@@ -47,12 +58,17 @@ namespace Physics2D.Physics
                     //Add in gravity, as well as any forces applied to our object
                     rb.Vel = rb.Vel + gravity + (rb.Force * rb.InvMass);
                 }
+                if (rb.InvInertia > 0)
+                {
+                    rb.RotVel = rb.RotVel + (rb.Torque * rb.InvInertia);
+                }
 
                 rb.ClearForces();
             }
 
             //Detect and resolve contacts
             contacts.Clear();
+
             //Use a triangular loop to find contacts and prevent double contacts
             for (int i = 0; i < bodies.Count-1; i++)
             {
@@ -68,7 +84,7 @@ namespace Physics2D.Physics
                 }
             }
 
-            Solver.Solve(contacts, 3, dt);
+            Solver.Solve(contacts, 1, dt);
 
             //Integrate
             foreach (RigidBody2D rb in bodies)
