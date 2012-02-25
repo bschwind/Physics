@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Physics2D.Physics;
 using Physics2D.Physics.Bodies;
+using Physics2D.Physics.Geometry;
 using Physics2D.Graphics;
 using GraphicsToolkit.GUI;
 using GraphicsToolkit.Graphics;
@@ -41,21 +42,21 @@ namespace Physics2D.GUI
         private void setupEngine()
         {
             engine = new PhysicsEngine();
-            int bodyCount = 8; 
+            int bodyCount = 1; 
             for (int i = 0; i < bodyCount; i++)
             {
-                engine.AddRigidBody(new CircleBody(new Vector2(i+1, 8), new Vector2(0, 0), 10f, 0.2f));
+                engine.AddRigidBody(new CircleBody(new Vector2(i+2, 8), new Vector2(0, 0), 10f, 0.2f));
             }
 
             for (int i = 0; i < bodyCount; i++)
             {
-                engine.AddRigidBody(new CircleBody(new Vector2(i+1.1f, 0), new Vector2(0,0), 10f, 0.2f));
+                //engine.AddRigidBody(new CircleBody(new Vector2(i+1.1f, 0), new Vector2(0,0), 10f, 0.2f));
             }
 
-            engine.AddRigidBody(new PlaneBody(Vector2.UnitY, Vector2.Zero));
-            engine.AddRigidBody(new PlaneBody(Vector2.UnitX, Vector2.Zero));
-            engine.AddRigidBody(new PlaneBody(-Vector2.UnitY, new Vector2(0, 10)));
-            engine.AddRigidBody(new PlaneBody(-Vector2.UnitX, new Vector2(10, 0)));
+            engine.AddRigidBody(new LineBody(Vector2.UnitY, Vector2.Zero));
+            engine.AddRigidBody(new LineBody(Vector2.UnitX, Vector2.Zero));
+            engine.AddRigidBody(new LineBody(-Vector2.UnitY, new Vector2(0, 10)));
+            engine.AddRigidBody(new LineBody(-Vector2.UnitX, new Vector2(10, 0)));
         }
 
         protected override void OnRefresh()
@@ -109,14 +110,18 @@ namespace Physics2D.GUI
 
             primBatch.Begin(PrimitiveType.LineList, cam);
             primBatch.Draw2DGrid(10, 10, Color.DarkSlateBlue);
+            AABB2D merged = engine.GetBodies()[0].MotionBounds;
             foreach (RigidBody2D rb in engine.GetBodies())
             {
                 CircleBody c = rb as CircleBody;
                 if (c != null)
                 {
-                    primBatch.DrawCircle(c.Pos, c.Radius, 12, Color.Orange);
-                }
+                    primBatch.DrawRotatedCircle(c.Pos, c.Radius, 12, c.Rot, Color.Orange);
+                    merged = AABB2D.CreateMerged(merged, rb.MotionBounds);
+                }  
             }
+
+            primBatch.DrawAABB(merged.Pos, merged.HalfExtents, Color.Red);
             if (mouseHeldDown)
             {
                 primBatch.DrawLine(new Vector3(mouseForceStart, 0), new Vector3(worldMousePos, 0), Color.Red);
