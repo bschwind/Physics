@@ -60,8 +60,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GraphicsToolkit">
-      <HintPath>..\..\..\Graphics-Toolkit\GraphicsToolkit\bin\x86\Debug\GraphicsToolkit.dll</HintPath>
+    <Reference Include="GraphicsToolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GraphicsToolkit\GraphicsToolkit\bin\x86\Debug\GraphicsToolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
@@ -113,14 +114,19 @@
     <Compile Include="Graphics\Circle.cs" />
     <Compile Include="Graphics\RectangleF.cs" />
     <Compile Include="GUI\DemoPanel.cs" />
+    <Compile Include="Physics\Bodies\AABBBody.cs" />
     <Compile Include="Physics\Bodies\CircleBody.cs" />
-    <Compile Include="Physics\Bodies\PlaneBody.cs" />
+    <Compile Include="Physics\Bodies\LineBody.cs" />
     <Compile Include="Physics\Bodies\RigidBody.cs" />
     <Compile Include="Physics\CircleObject.cs" />
     <Compile Include="Physics\Contact.cs" />
     <Compile Include="Physics\GameMath.cs" />
+    <Compile Include="Physics\Geometry\AABB.cs" />
+    <Compile Include="Physics\Geometry\Circle.cs" />
     <Compile Include="Physics\Intersection.cs" />
     <Compile Include="Physics\LineSegment.cs" />
+    <Compile Include="Physics\Partitions\GridPartition.cs" />
+    <Compile Include="Physics\Partitions\Partition.cs" />
     <Compile Include="Physics\PhysicsEngine.cs" />
     <Compile Include="Physics\PhysicsEngineOld.cs" />
     <Compile Include="Physics\Solver.cs" />
