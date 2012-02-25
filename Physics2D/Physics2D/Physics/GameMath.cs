@@ -12,5 +12,10 @@ namespace Physics2D.Physics
         {
             return (Vector2.Dot(a, b) / Vector2.Dot(b, b)) * b;
         }
+
+        public static Vector2 Perp(Vector2 a)
+        {
+            return new Vector2(a.Y, -a.X);
+        }
     }
 }

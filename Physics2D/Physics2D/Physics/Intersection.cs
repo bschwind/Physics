@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Physics2D.Physics.Bodies;
 
 namespace Physics2D.Physics
 {
@@ -309,6 +310,35 @@ namespace Physics2D.Physics
             }
 
             return false;
+        }
+
+        public static Vector2 ClosestPointAABBPt(Vector2 p, AABBBody b)
+        {
+            Vector2 v = p;
+            Vector2 bMin = b.Pos - b.HalfExtents;
+            Vector2 bMax = b.Pos + b.HalfExtents;
+
+            //Clamp X
+            if (v.X < bMin.X)
+            {
+                v.X = bMin.X;
+            }
+            if (v.X > bMax.X)
+            {
+                v.X = bMax.X;
+            }
+
+            //Clamp Y
+            if (v.Y < bMin.Y)
+            {
+                v.Y = bMin.Y;
+            }
+            if (v.Y > bMax.Y)
+            {
+                v.Y = bMax.Y;
+            }
+
+            return v;
         }
     }
 }
