@@ -134,6 +134,8 @@ namespace Physics2D.Physics.Bodies
             this.pos = pos;
             this.vel = vel;
             this.rotVel = rotVel;
+
+            GenerateMotionAABB(0f);
         }
 
         public void AddForce(Vector2 f)
@@ -161,7 +163,6 @@ namespace Physics2D.Physics.Bodies
         {
             pos += vel * dt;
             rot += rotVel * dt;
-            GenerateMotionAABB(dt);
         }
 
         public Vector2 GetVelocityOfPoint(Vector2 p)

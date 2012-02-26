@@ -13,15 +13,18 @@ namespace Physics2D.Physics
     {
         private Vector2 gravity = new Vector2(0, -0.1f);
         private List<RigidBody2D> bodies;
+        private List<RigidBody2D> lines;
         private List<Contact> contacts = new List<Contact>();
         private Partition partition;
+        private AABB2D merged = new AABB2D();
 
         public PhysicsEngine()
         {
             bodies = new List<RigidBody2D>();
-            
+            lines = new List<RigidBody2D>();
+
             //By default, use a grid partition
-            partition = new GridPartition();
+            partition = new GridPartition(Vector2.Zero, new Vector2(20, 10), 40, 40);
         }
 
         public PhysicsEngine(Partition p)
@@ -31,7 +34,14 @@ namespace Physics2D.Physics
 
         public void AddRigidBody(RigidBody2D rb)
         {
-            bodies.Add(rb);
+            if (rb as LineBody != null)
+            {
+                lines.Add(rb);
+            }
+            else
+            {
+                bodies.Add(rb);
+            }
         }
 
         public List<RigidBody2D> GetBodies()
@@ -47,7 +57,7 @@ namespace Physics2D.Physics
         public void Update(GameTime g)
         {
             float dt = Math.Max((float)g.ElapsedGameTime.TotalSeconds, 1f / 60);
-
+            merged = bodies[0].MotionBounds;
             //Apply gravity to each body
             //Also apply external forces here, such as player input
             foreach (RigidBody2D rb in bodies)
@@ -64,13 +74,19 @@ namespace Physics2D.Physics
                 }
 
                 rb.ClearForces();
+                rb.GenerateMotionAABB(dt);
+                merged = AABB2D.CreateMerged(merged, rb.MotionBounds);
             }
+
+            merged.Inflate(1f);
+
+            (partition as GridPartition).UpdateMinMax(merged.GetMin(), merged.GetMax());
 
             //Detect and resolve contacts
             contacts.Clear();
 
             //Use a triangular loop to find contacts and prevent double contacts
-            for (int i = 0; i < bodies.Count-1; i++)
+            /*for (int i = 0; i < bodies.Count-1; i++)
             {
                 RigidBody2D a = bodies[i];
                 for (int j = i + 1; j < bodies.Count; j++)
@@ -81,6 +97,16 @@ namespace Physics2D.Physics
                         //Add a speculative contact
                         contacts.Add(a.GenerateContact(b, dt));
                     }
+                }
+            }*/
+
+            partition.GenerateContacts(ref bodies, ref contacts, dt);
+
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                for (int j = 0; j < lines.Count; j++)
+                {
+                    contacts.Add(bodies[i].GenerateContact(lines[j], dt));
                 }
             }
 

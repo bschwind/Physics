@@ -27,6 +27,12 @@ namespace Physics2D.Physics.Geometry
             return Pos + HalfExtents;
         }
 
+        public void Inflate(float amount)
+        {
+            HalfExtents.X += amount;
+            HalfExtents.Y += amount;
+        }
+
         public static AABB2D CreateFromMinMax(Vector2 min, Vector2 max)
         {
             min = Vector2.Min(min, max);

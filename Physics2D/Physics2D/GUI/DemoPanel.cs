@@ -56,7 +56,7 @@ namespace Physics2D.GUI
             engine.AddRigidBody(new LineBody(Vector2.UnitY, Vector2.Zero));
             engine.AddRigidBody(new LineBody(Vector2.UnitX, Vector2.Zero));
             engine.AddRigidBody(new LineBody(-Vector2.UnitY, new Vector2(0, 10)));
-            engine.AddRigidBody(new LineBody(-Vector2.UnitX, new Vector2(10, 0)));
+            engine.AddRigidBody(new LineBody(-Vector2.UnitX, new Vector2(20, 0)));
         }
 
         protected override void OnRefresh()
@@ -97,7 +97,6 @@ namespace Physics2D.GUI
                     rb.AddForce(force);
                 }
             }
-
             engine.Update(g);
         }
 
@@ -109,19 +108,16 @@ namespace Physics2D.GUI
             Vector2 worldMousePos = cam.GetWorldMousePos();
 
             primBatch.Begin(PrimitiveType.LineList, cam);
-            primBatch.Draw2DGrid(10, 10, Color.DarkSlateBlue);
-            AABB2D merged = engine.GetBodies()[0].MotionBounds;
+            primBatch.Draw2DGrid(20, 10, Color.DarkSlateBlue);
             foreach (RigidBody2D rb in engine.GetBodies())
             {
                 CircleBody c = rb as CircleBody;
                 if (c != null)
                 {
                     primBatch.DrawRotatedCircle(c.Pos, c.Radius, 12, c.Rot, Color.Orange);
-                    merged = AABB2D.CreateMerged(merged, rb.MotionBounds);
                 }  
             }
 
-            primBatch.DrawAABB(merged.Pos, merged.HalfExtents, Color.Red);
             if (mouseHeldDown)
             {
                 primBatch.DrawLine(new Vector3(mouseForceStart, 0), new Vector3(worldMousePos, 0), Color.Red);

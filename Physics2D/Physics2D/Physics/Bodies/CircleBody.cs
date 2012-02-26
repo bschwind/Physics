@@ -37,6 +37,7 @@ namespace Physics2D.Physics.Bodies
 
         public override Contact GenerateContact(RigidBody2D rb, float dt)
         {
+            //Profiler says this method takes up a lot of processing time (AKA, it's run quite often)
             if (rb as CircleBody != null)
             {
                 CircleBody c = rb as CircleBody;
