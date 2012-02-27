@@ -57,7 +57,7 @@ namespace Physics2D.Physics
         public void Update(GameTime g)
         {
             float dt = Math.Max((float)g.ElapsedGameTime.TotalSeconds, 1f / 60);
-            merged = bodies[0].MotionBounds;
+            //merged = bodies[0].MotionBounds;
             //Apply gravity to each body
             //Also apply external forces here, such as player input
             foreach (RigidBody2D rb in bodies)
@@ -75,12 +75,12 @@ namespace Physics2D.Physics
 
                 rb.ClearForces();
                 rb.GenerateMotionAABB(dt);
-                merged = AABB2D.CreateMerged(merged, rb.MotionBounds);
+                //merged = AABB2D.CreateMerged(merged, rb.MotionBounds);
             }
 
-            merged.Inflate(1f);
+            //merged.Inflate(1f);
 
-            (partition as GridPartition).UpdateMinMax(merged.GetMin(), merged.GetMax());
+            //(partition as GridPartition).UpdateMinMax(merged.GetMin(), merged.GetMax());
 
             //Detect and resolve contacts
             contacts.Clear();
