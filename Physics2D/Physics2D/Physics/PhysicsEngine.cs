@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Physics2D.Physics.Bodies;
 using Physics2D.Physics.Geometry;
 using Physics2D.Physics.Partitions;
+using Physics2D.Physics.Constraints;
 
 namespace Physics2D.Physics
 {
@@ -14,14 +15,15 @@ namespace Physics2D.Physics
         private Vector2 gravity = new Vector2(0, -0.1f);
         private List<RigidBody2D> bodies;
         private List<RigidBody2D> lines;
+        private List<Constraint> constraints;
         private List<Contact> contacts = new List<Contact>();
         private Partition partition;
-        private AABB2D merged = new AABB2D();
 
         public PhysicsEngine()
         {
             bodies = new List<RigidBody2D>();
             lines = new List<RigidBody2D>();
+            constraints = new List<Constraint>();
 
             //By default, use a grid partition
             partition = new GridPartition(Vector2.Zero, new Vector2(20, 10), 40, 40);
@@ -42,6 +44,11 @@ namespace Physics2D.Physics
             {
                 bodies.Add(rb);
             }
+        }
+
+        public void AddConstraint(Constraint c)
+        {
+            constraints.Add(c);
         }
 
         public List<RigidBody2D> GetBodies()
@@ -75,30 +82,10 @@ namespace Physics2D.Physics
 
                 rb.ClearForces();
                 rb.GenerateMotionAABB(dt);
-                //merged = AABB2D.CreateMerged(merged, rb.MotionBounds);
             }
-
-            //merged.Inflate(1f);
-
-            //(partition as GridPartition).UpdateMinMax(merged.GetMin(), merged.GetMax());
 
             //Detect and resolve contacts
             contacts.Clear();
-
-            //Use a triangular loop to find contacts and prevent double contacts
-            /*for (int i = 0; i < bodies.Count-1; i++)
-            {
-                RigidBody2D a = bodies[i];
-                for (int j = i + 1; j < bodies.Count; j++)
-                {
-                    if (bodies[i].InvMass != 0 || bodies[j].InvMass != 0)
-                    {
-                        RigidBody2D b = bodies[j];
-                        //Add a speculative contact
-                        contacts.Add(a.GenerateContact(b, dt));
-                    }
-                }
-            }*/
 
             partition.GenerateContacts(ref bodies, ref contacts, dt);
 
@@ -111,6 +98,11 @@ namespace Physics2D.Physics
             }
 
             Solver.Solve(contacts, 1, dt);
+
+            foreach (Constraint c in constraints)
+            {
+                c.Solve(dt);
+            }
 
             //Integrate
             foreach (RigidBody2D rb in bodies)

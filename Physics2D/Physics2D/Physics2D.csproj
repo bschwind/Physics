@@ -119,6 +119,8 @@
     <Compile Include="Physics\Bodies\LineBody.cs" />
     <Compile Include="Physics\Bodies\RigidBody.cs" />
     <Compile Include="Physics\CircleObject.cs" />
+    <Compile Include="Physics\Constraints\Constraint.cs" />
+    <Compile Include="Physics\Constraints\DistanceConstraint.cs" />
     <Compile Include="Physics\Contact.cs" />
     <Compile Include="Physics\GameMath.cs" />
     <Compile Include="Physics\Geometry\AABB.cs" />

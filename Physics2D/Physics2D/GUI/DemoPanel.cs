@@ -9,6 +9,7 @@ using Physics2D.Physics;
 using Physics2D.Physics.Bodies;
 using Physics2D.Physics.Geometry;
 using Physics2D.Graphics;
+using Physics2D.Physics.Constraints;
 using GraphicsToolkit.GUI;
 using GraphicsToolkit.Graphics;
 using GraphicsToolkit.Input;
@@ -45,18 +46,23 @@ namespace Physics2D.GUI
             int bodyCount = 1; 
             for (int i = 0; i < bodyCount; i++)
             {
-                engine.AddRigidBody(new CircleBody(new Vector2(i+2, 8), new Vector2(0, 0), 10f, 0.2f));
+                engine.AddRigidBody(new CircleBody(new Vector2(i+2, 8), new Vector2(0, 0), 0f, 0.2f));
             }
 
             for (int i = 0; i < bodyCount; i++)
             {
-                //engine.AddRigidBody(new CircleBody(new Vector2(i+1.1f, 0), new Vector2(0,0), 10f, 0.2f));
+                RigidBody2D rb = new CircleBody(new Vector2(i + 1.1f, 0), new Vector2(0, 0), 10f, 0.2f);
+                engine.AddRigidBody(rb);
+                engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[0], 4));
             }
 
-            engine.AddRigidBody(new LineBody(Vector2.UnitY, Vector2.Zero));
+            LineBody b = new LineBody(Vector2.UnitY, Vector2.Zero);
+            engine.AddRigidBody(b);
             engine.AddRigidBody(new LineBody(Vector2.UnitX, Vector2.Zero));
             engine.AddRigidBody(new LineBody(-Vector2.UnitY, new Vector2(0, 10)));
             engine.AddRigidBody(new LineBody(-Vector2.UnitX, new Vector2(20, 0)));
+
+            //engine.AddConstraint(new DistanceConstraint(b, engine.GetBodies()[0], 4));
         }
 
         protected override void OnRefresh()
@@ -84,7 +90,9 @@ namespace Physics2D.GUI
 
             if (InputHandler.MouseState.RightButton == ButtonState.Pressed)
             {
-                engine.AddRigidBody(new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.2f));
+                RigidBody2D rb = new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.2f);
+                engine.AddRigidBody(rb);
+                engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[engine.GetBodies().Count-2], 1));
             }
 
             Vector2 force = Vector2.Zero;
