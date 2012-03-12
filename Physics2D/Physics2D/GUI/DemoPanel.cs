@@ -53,7 +53,7 @@ namespace Physics2D.GUI
             {
                 RigidBody2D rb = new CircleBody(new Vector2(i + 1.1f, 0), new Vector2(0, 0), 10f, 0.2f);
                 engine.AddRigidBody(rb);
-                engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[0], 4));
+                //engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[0], 4));
             }
 
             LineBody b = new LineBody(Vector2.UnitY, Vector2.Zero);
@@ -92,7 +92,7 @@ namespace Physics2D.GUI
             {
                 RigidBody2D rb = new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.2f);
                 engine.AddRigidBody(rb);
-                engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[engine.GetBodies().Count-2], 1));
+                //engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[engine.GetBodies().Count-2], 1));
             }
 
             Vector2 force = Vector2.Zero;
