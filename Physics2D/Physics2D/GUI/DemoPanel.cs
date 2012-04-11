@@ -5,11 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Physics2D.Physics;
-using Physics2D.Physics.Bodies;
-using Physics2D.Physics.Geometry;
-using Physics2D.Graphics;
-using Physics2D.Physics.Constraints;
+using GraphicsToolkit.Physics._2D;
+using GraphicsToolkit.Physics._2D.Bodies;
+using GraphicsToolkit.Physics._2D.Geometry;
+using GraphicsToolkit.Physics._2D.Constraints;
 using GraphicsToolkit.GUI;
 using GraphicsToolkit.Graphics;
 using GraphicsToolkit.Input;
@@ -22,8 +21,9 @@ namespace Physics2D.GUI
         Camera2D cam;
         Vector2 mouseForceStart;
         bool mouseHeldDown = false;
+        Random rand = new Random();
 
-        PhysicsEngine engine;
+        PhysicsEngine2D engine;
 
         public DemoPanel(Vector2 upLeft, Vector2 botRight)
             : base(upLeft, botRight)
@@ -42,27 +42,24 @@ namespace Physics2D.GUI
 
         private void setupEngine()
         {
-            engine = new PhysicsEngine();
+            engine = new PhysicsEngine2D();
             int bodyCount = 1; 
             for (int i = 0; i < bodyCount; i++)
             {
-                engine.AddRigidBody(new CircleBody(new Vector2(i+2, 8), new Vector2(0, 0), 0f, 0.2f));
+                engine.AddRigidBody(new CircleBody(new Vector2(i+2, 8), new Vector2(0, 0), 0f, 0f, 0.2f));
             }
 
             for (int i = 0; i < bodyCount; i++)
             {
-                RigidBody2D rb = new CircleBody(new Vector2(i + 1.1f, 0), new Vector2(0, 0), 10f, 0.2f);
+                RigidBody2D rb = new CircleBody(new Vector2(i +2, 6), new Vector2(1 , 0), 0.0f, 10f, 0.2f);
                 engine.AddRigidBody(rb);
-                //engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[0], 4));
+                engine.AddConstraint(new DistanceConstraint2D(rb, engine.GetBodies()[0], 4));
             }
 
-            LineBody b = new LineBody(Vector2.UnitY, Vector2.Zero);
-            engine.AddRigidBody(b);
+            engine.AddRigidBody(new LineBody(Vector2.UnitY, Vector2.Zero));
             engine.AddRigidBody(new LineBody(Vector2.UnitX, Vector2.Zero));
             engine.AddRigidBody(new LineBody(-Vector2.UnitY, new Vector2(0, 10)));
             engine.AddRigidBody(new LineBody(-Vector2.UnitX, new Vector2(20, 0)));
-
-            //engine.AddConstraint(new DistanceConstraint(b, engine.GetBodies()[0], 4));
         }
 
         protected override void OnRefresh()
@@ -81,7 +78,6 @@ namespace Physics2D.GUI
             {
                 mouseHeldDown = true;
                 mouseForceStart = cam.GetWorldMousePos();
-                
             }
             else if (InputHandler.MouseState.LeftButton != ButtonState.Pressed)
             {
@@ -90,9 +86,10 @@ namespace Physics2D.GUI
 
             if (InputHandler.MouseState.RightButton == ButtonState.Pressed)
             {
-                RigidBody2D rb = new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 10f, 0.2f);
+                float radius = rand.Next(10, 50) / 100f;
+                //RigidBody2D rb = new CircleBody(cam.GetWorldMousePos(), new Vector2(0, 0), 0.0f, MathHelper.Pi * radius*radius * 100, radius);
+                RigidBody2D rb = new CircleBody(cam.GetWorldMousePos(), Vector2.Zero, 0f, 2f, 0.2f);
                 engine.AddRigidBody(rb);
-                //engine.AddConstraint(new DistanceConstraint(rb, engine.GetBodies()[engine.GetBodies().Count-2], 1));
             }
 
             Vector2 force = Vector2.Zero;
@@ -105,7 +102,15 @@ namespace Physics2D.GUI
                     rb.AddForce(force);
                 }
             }
-            engine.Update(g);
+
+            if (!InputHandler.IsKeyPressed(Keys.Space))
+            {
+                engine.Update(g);
+            }
+            else if (InputHandler.IsNewKeyPress(Keys.Right))
+            {
+                engine.Update(g);
+            }
         }
 
         public override void Draw(GameTime g)
@@ -130,6 +135,7 @@ namespace Physics2D.GUI
             {
                 primBatch.DrawLine(new Vector3(mouseForceStart, 0), new Vector3(worldMousePos, 0), Color.Red);
             }
+
             primBatch.End();
         }
     }

@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Physics2D.Physics;
 using Physics2D.GUI;
 using GraphicsToolkit;
 using GraphicsToolkit.GUI;
